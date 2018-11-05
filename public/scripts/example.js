@@ -9,10 +9,27 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+/* 
+1、React.createClass()方法用于生成一个组件类
 
-var Comment = React.createClass({
+2、所有组件类都必须有自己的render方法，用于输出组件
+
+3、假如生成一个组件类HelloMessage，模板插入<HelloMessage />时，会自动生成组件类HelloMessage的一个实例
+
+4、组件类的第一个字母必须大写，否则会报错，比如HelloWorld，不能写成helloWorld
+
+5、组件类里面只能包含一个顶层标签，否则会报错（组件类的render方法里面）
+
+6、组件类对应的标签的用法和HTML标签的用法完全一致，可以加入任意的属性。假如生成一个组件类HelloMessage，其对应的组件标签就是<HelloMessage />，在这个标签里面可以加入普通的HTML标签的任意属性，例如：<HelloMessage name="小丸子"/>，就是给组件标签<HelloMessage />加入了一个name属性，值为“小丸子”
+
+7、给组件标签添加属性时，需要注意两个地方，就是把class属性写成className，for属性写成htmlFor，这是因为class和for时JS里面的保留字
+*/
+
+var Comment = React.createClass({ // 组件定义入口
   rawMarkup: function() {
-    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+   
+    
+    var rawMarkup = marked(this.props.children.toString(), {sanitize: true}); //this.props.children 的值有三种可能：如果当前组件没有子节点，它就是 undefined ；如果有一个子节点，数据类型是 object ；如果有多个子节点，数据类型就是 array
     return { __html: rawMarkup };
   },
 
@@ -31,7 +48,7 @@ var Comment = React.createClass({
 var CommentBox = React.createClass({
   loadCommentsFromServer: function() {
     $.ajax({
-      url: this.props.url,
+      url: this.props.url, // 属性就是props
       dataType: 'json',
       cache: false,
       success: function(data) {
@@ -65,7 +82,7 @@ var CommentBox = React.createClass({
     });
   },
   getInitialState: function() {
-    return {data: []};
+    return {data: []}; // state是跟着组件的数据，state变动后会自动执行render()
   },
   componentDidMount: function() {
     this.loadCommentsFromServer();
@@ -139,7 +156,7 @@ var CommentForm = React.createClass({
     );
   }
 });
-
+// 渲染起点
 ReactDOM.render(
   <CommentBox url="/api/comments" pollInterval={2000} />,
   document.getElementById('content')
